@@ -192,7 +192,7 @@ body {
 .cssThumbnailImage {
     cursor: pointer;
     pointer-events: all;
-    height: 20vh;
+    height: 21vh;
     margin-right: 4px;
     margin-bottom: 4px;
 }
@@ -201,6 +201,6 @@ body {
 /* *** WHEN PHONE LANDSCAPE or wider *** */
 @media (min-width: 768px) {
     .cssThumbnailImage {
-        height: 25vh;
+        height: 26vh;
     }
 }
