@@ -142,15 +142,6 @@ body {
 }
 
 
-.cssThumbnailImage {
-    cursor: pointer;
-    pointer-events: all;
-    height: 10vh;
-    margin-right: 4px;
-    margin-bottom: 4px;
-
-}
-
 .cssColThumbnails {
     overflow-y: auto;
     overflow-x: hidden;
@@ -198,9 +189,18 @@ body {
     max-height: 12px;
 }
 
+.cssThumbnailImage {
+    cursor: pointer;
+    pointer-events: all;
+    height: 10vh;
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+
+
 /* *** WHEN PHONE LANDSCAPE or wider *** */
 @media (min-width: 768px) {
     .cssThumbnailImage {
-        height: 15vh;
+        height: 20vh;
     }
 }
