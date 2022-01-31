@@ -140,23 +140,29 @@ body {
     min-width: 3.5rem;
     text-align: center;
 }
+
+.cssThumbnailDiv {
+    cursor: auto;
+    pointer-events: none;
+    width: 32%;
+    margin-bottom: 4px;
+}
+
 .cssThumbnailImage {
     cursor: pointer;
     pointer-events: all;
-    width: 20%;
-    /*max-width: 31%;*/
-    margin: 1px;
-    /*--bs-aspect-ratio: 76%;*/
+    width: 100%;
 }
 
 .cssColThumbnails {
-    /* gets its height set specifically */
-    overflow-y: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 .cssDivThumbnails {
     /* dont set its height so it can flex-shrink-1 to bunch thumbs */
     cursor: auto;
-    overflow-y: auto;
+    /*overflow-y: auto;*/
+    /*overflow-x: hidden;*/
     margin-top: 4px;
     margin-bottom: 4px;
 }
@@ -197,8 +203,7 @@ body {
 
 /* *** WHEN PHONE LANDSCAPE or wider *** */
 @media (min-width: 576px) {
-    .cssThumbnailImage {
-        width: 32%;
-        /*max-width: 48%;*/
+    .cssThumbnailDiv {
+        width: 19%;
     }
 }

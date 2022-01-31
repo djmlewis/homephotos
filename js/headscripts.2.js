@@ -1,17 +1,38 @@
-// call these functions on DOM loaded
-window.addEventListener('DOMContentLoaded', function () {
+// call these functions on DOM loaded  -- DOMContentLoaded on DOCUMENT, onload on WINDOW
+document.addEventListener('DOMContentLoaded', function () {
+    setupGlobals();
+    gvBootstrapModalPhoto = new bootstrap.Modal(gvModalPhoto, {});
+    gvModalPhoto.addEventListener('hidden.bs.modal', function (ev) {
+        gvModalPhotoIsShown = false;
+    });
+    gvModalPhoto.addEventListener('shown.bs.modal', function (ev) {
+        gvModalPhotoIsShown = true;
+    });
     buildYearButtons();
-
 });
 
-// call these functions on page fully loaded
+
+// call these functions on page fully loaded  -- DOMContentLoaded on DOCUMENT, onload on WINDOW
     window.addEventListener('load', function () {
-        gvModalPhoto = new bootstrap.Modal(document.getElementById('modal-photo'), {});
-
+        window.addEventListener('resize',()=>handleWindowResize());
+        resizeColumns();
 });
+
+function setupGlobals() {
+    gvColYears = document.getElementById('col-years');
+    gvDivYears = document.getElementById('div-years');
+    gvDivDirsOuter = document.getElementById('div-dirsOuter');
+    gvDivDirs = document.getElementById('div-dirs');
+    gvColThumbnails = document.getElementById('col-thumbnails');
+    gvDivThumbnailsouter = document.getElementById('div-thumbnailsouter');
+    gvDivThumbnails = document.getElementById('div-thumbnails');
+    gvModalPhoto = document.getElementById('modal-photo');
+    gvDivPhotoFS = document.getElementById('div-photoFS');
+    gvImgPhotoFS = document.getElementById('img-photoFS');
+}
 
 function buildYearButtons() {
-    const divYears = document.getElementById('div-years');
+    gvDivYears.innerHTML = '';
     Object.keys(gvIndexMediaObj).sort().forEach(yearName=>{
         let btn = document.createElement('div');
         const favCSS = yearName === kFavsName ? ' cssYearBtnFavs' : '';
@@ -19,11 +40,11 @@ function buildYearButtons() {
         btn.innerText = yearName;
         btn.setAttribute('data-year',yearName);
         btn.onclick = handleYearClicked;
-        divYears.appendChild(btn);
+        gvDivYears.appendChild(btn);
     });
-    addIndexYearButton(divYears);
+    addIndexYearButton(gvDivYears);
     // set the selected year
-    const btns = Array.from(divYears.getElementsByClassName('cssYearBtn'));
+    const btns = Array.from(gvDivYears.getElementsByClassName('cssYearBtn'));
     let prefBtn = btns[0];
     // select the last used if available or keep first button
     const savedYear = localStorage.getItem(ls_yearButtonName);
@@ -35,8 +56,7 @@ function buildYearButtons() {
     // add its dirs
     loadDirectoriesForYear(prefBtn.getAttribute('data-year'));
     // select prev dir if available
-    const divDirs = document.getElementById('div-dirs');
-    const dirs = Array.from(divDirs.getElementsByClassName('cssIndexRow'));
+    const dirs = Array.from(gvDivDirs.getElementsByClassName('cssIndexRow'));
     let prefDirDiv = dirs[0];
     const savedDir = localStorage.getItem(ls_dirDivName);
     if (!!savedDir) {
@@ -69,12 +89,11 @@ function toggleYearBtnSelected(btn,selected) {
 }
 
 function clearYearButtonSelected() {
-    for(const btn of document.getElementById('div-years').getElementsByClassName('cssYearBtn')) toggleYearBtnSelected(btn,false);
+    for(const btn of gvDivYears.getElementsByClassName('cssYearBtn')) toggleYearBtnSelected(btn,false);
 }
 
 function loadDirectoriesForYear(year) {
-    const divDirs = document.getElementById('div-dirs');
-    divDirs.innerHTML = '';
+    gvDivDirs.innerHTML = '';
     Object.keys(gvIndexMediaObj[year]).sort().forEach((dirkey,indx) => {
             const div = document.createElement('div');
             div.setAttribute('data-year',year);
@@ -83,7 +102,7 @@ function loadDirectoriesForYear(year) {
             div.innerText = dirkey;
             div.className = "cssIndexRow";
             div.onclick = handleDirDivClicked;
-            divDirs.appendChild(div);
+        gvDivDirs.appendChild(div);
         });
 }
 
@@ -98,14 +117,13 @@ function handleDirDivClicked(ev) {
 function loadThumbnailsForDirectory(divClicked) {
     const year = divClicked.getAttribute('data-year');
     const dirkey = divClicked.getAttribute('data-dirkey');
-    const divThumbnails = document.getElementById('div-thumbnailsouter');
-    divThumbnails.innerHTML = '';
+    gvDivThumbnails.innerHTML = '';
     // dirkey obj is an array
     const dirkeyObj = gvIndexMediaObj[year][dirkey];
-    if(!!dirkeyObj) dirkeyObj.forEach(thumbName => {
-        divThumbnails.appendChild(thumnNailDivForNameDirYear(thumbName, dirkey,year));
+    if(!!dirkeyObj) dirkeyObj.forEach((thumbName, indx) => {
+        gvDivThumbnails.appendChild(thumnNailDivForNameDirYear(thumbName, dirkey,year, indx));
     });
-    divThumbnails.scrollTop = 0;
+    gvDivThumbnails.scrollTop = 0;
 
     /*
         divThumbnails.innerHTML = '';
@@ -133,26 +151,47 @@ function loadThumbnailsForDirectory(divClicked) {
         divThumbnails.scrollTop = 0;
     */
 }
-function thumnNailDivForNameDirYear(thumbName,dirkey, year) {
+function thumnNailDivForNameDirYear(thumbName,dirkey, year,indx) {
     let imgdiv = document.createElement('div');
+    imgdiv.className = "cssThumbnailDiv";
     let img = document.createElement('img');
-    img.style.width = '100%';
-    imgdiv.className = 'cssThumbnailImage ratio ratio-4x3'; //ratio
-    img.style.objectFit = 'scale-down';
+    img.className = 'cssThumbnailImage'; //ratio ratio-4x3
     const jpegpath = 'media/jpegs/'+year+'/'+dirkey+'/'+thumbName;
     img.src = jpegpath;
     img.setAttribute('data-thumbName',thumbName);
     img.setAttribute('data-year',year);
     img.setAttribute('data-dirkey',dirkey);
     img.setAttribute('data-jpegpath',jpegpath);
+    img.setAttribute('data-indx',String(indx));
     img.onclick = handleThumbnailClicked;
     imgdiv.appendChild(img);
     return imgdiv;
 }
 function handleThumbnailClicked(ev) {
-    gvModalPhoto.show();
+    gvImgPhotoFS.src = ev.target.getAttribute('data-jpegpath');
+    gvBootstrapModalPhoto.show();
 }
 
+function resizeImgFS() {
+    const hwRatioImg = gvImgPhotoFS.naturalHeight / gvImgPhotoFS.naturalWidth;
+    const divrect = gvDivPhotoFS.getBoundingClientRect();
+    const imgWidthUsingWindowheight = divrect.height / hwRatioImg;
+
+
+    if(imgWidthUsingWindowheight <= divrect.width) {
+        // set height to divrect h as width fits
+        gvImgPhotoFS.height = divrect.height;
+        gvImgPhotoFS.width = imgWidthUsingWindowheight;
+    } else {
+        gvImgPhotoFS.height = divrect.width * hwRatioImg;
+        gvImgPhotoFS.width = divrect.width;
+    }
+
+    gvImgPhotoFS.style.marginLeft = ((divrect.width - gvImgPhotoFS.width) / 2) + 'px';
+    gvImgPhotoFS.style.marginTop = ((divrect.height - gvImgPhotoFS.height) / 2) + 'px';
+
+
+}
 function handleYearClicked(ev) {
     clearYearButtonSelected();
     toggleYearBtnSelected(ev.target,true);
@@ -162,7 +201,7 @@ function handleYearClicked(ev) {
 }
 
 function clearAllsDirButtonsSelected() {
-    for(const btn of document.getElementById('div-dirs').getElementsByClassName('cssIndexRow')) btn.classList.remove('cssDirSelected');
+    for(const btn of gvDivDirs.getElementsByClassName('cssIndexRow')) btn.classList.remove('cssDirSelected');
 }
 
 function updateDirDivSelected(btn,selected) {
@@ -171,4 +210,55 @@ function updateDirDivSelected(btn,selected) {
     } else {
         btn.classList.remove('cssDirSelected');
     }
+}
+
+function handleWindowResize() {
+    clearTimeout(gvResizeTimer);
+    gvResizeTimer = setTimeout(()=>{handleResizeTimer()},100);
+}
+
+function handleResizeTimer() {
+    if(gvModalPhotoIsShown) {
+        resizeImgFS();
+    }
+    resizeColumns();
+}
+function isLandscape() {
+    //gvColThumbnails is 2/3 of width
+    return gvColThumbnails.getBoundingClientRect().width / window.innerWidth < 0.7;
+}
+
+function resizeColumns() {
+    const availableHeight = window.innerHeight - gvDivYears.getBoundingClientRect().height;
+    if(isLandscape()) {
+        //alongside
+        gvDivThumbnailsouter.style.height = window.innerHeight + 'px';
+        gvDivDirsOuter.style.height = availableHeight + 'px';
+    } else {
+        // stacked
+        gvDivDirsOuter.style.height = (availableHeight * 0.25) + 'px';
+        gvDivThumbnailsouter.style.height = (availableHeight * 0.75) + 'px';
+    }
+
+    /*
+        const colyears = document.getElementById('col-years');
+        const colthumbs = document.getElementById('col-thumbnails');
+        const innerheight = window.innerHeight;
+        // i dont trust reported col heights so have a special div video outer
+        const divvideoouter = document.getElementById('div-videoOuter');
+        const divYears = document.getElementById('div-years');
+        const btnThumbsIndex = document.getElementById('btn-ThumbsIndex');
+        btnThumbsIndex.hidden = indexIsSelectedYear() || favsIsSelectedYear();
+        if(isLandscape()) {
+            //alongside
+            colthumbs.style.height = innerheight + 'px';
+            colyears.style.height = innerheight + 'px';
+            btnThumbsIndex.style.marginTop = '6px';
+        } else {
+            // stacked
+            colthumbs.style.height = (innerheight - divYears.getBoundingClientRect().height - divvideoouter.getBoundingClientRect().height) + 'px';
+            colyears.style.height = 'auto';
+            btnThumbsIndex.style.marginTop = '0';
+        }
+    */
 }
