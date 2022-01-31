@@ -141,17 +141,20 @@ body {
     text-align: center;
 }
 
-.cssThumbnailDiv {
+.cssThumbnailWrapperDiv {
     cursor: auto;
     pointer-events: none;
-    width: 32%;
-    margin-bottom: 4px;
+    /*width: 32%;*/
 }
 
 .cssThumbnailImage {
     cursor: pointer;
     pointer-events: all;
-    width: 100%;
+    /*width: 100%;*/
+    height: 15vh;
+    margin-right: 4px;
+    margin-bottom: 4px;
+
 }
 
 .cssColThumbnails {
@@ -203,7 +206,9 @@ body {
 
 /* *** WHEN PHONE LANDSCAPE or wider *** */
 @media (min-width: 576px) {
-    .cssThumbnailDiv {
-        width: 19%;
+    .cssThumbnailWrapperDiv {
+        /*width: 19%;*/
+        /*height: 10vh;*/
+        /*object-fit: scale-down;*/
     }
 }

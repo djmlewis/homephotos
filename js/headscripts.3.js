@@ -152,8 +152,8 @@ function loadThumbnailsForDirectory(divClicked) {
     */
 }
 function thumnNailDivForNameDirYear(thumbName,dirkey, year,indx) {
-    let imgdiv = document.createElement('div');
-    imgdiv.className = "cssThumbnailDiv";
+    //let imgdiv = document.createElement('div');
+    //imgdiv.className = "cssThumbnailWrapperDiv";
     let img = document.createElement('img');
     img.className = 'cssThumbnailImage'; //ratio ratio-4x3
     const jpegpath = 'media/jpegs/'+year+'/'+dirkey+'/'+thumbName;
@@ -164,8 +164,8 @@ function thumnNailDivForNameDirYear(thumbName,dirkey, year,indx) {
     img.setAttribute('data-jpegpath',jpegpath);
     img.setAttribute('data-indx',String(indx));
     img.onclick = handleThumbnailClicked;
-    imgdiv.appendChild(img);
-    return imgdiv;
+    //imgdiv.appendChild(img);
+    return img;
 }
 function handleThumbnailClicked(ev) {
     gvImgPhotoFS.src = ev.target.getAttribute('data-jpegpath');
