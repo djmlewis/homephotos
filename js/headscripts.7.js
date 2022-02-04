@@ -31,7 +31,6 @@ function setupGlobals() {
     gvImgPhotoFS = document.getElementById('img-photoFS');
     gvDivPhotoFSdivTop = document.getElementById('div-photoFS-divTop');
     gvDivPhotoFSdivBottom = document.getElementById('div-photoFS-divBottom');
-    gvDivPhotoFStoolbars = [gvDivPhotoFSdivTop,gvDivPhotoFSdivBottom];
     gvDivPhotoFSbtnNext = document.getElementById('btn-next');
     gvDivPhotoFSbtnPrev = document.getElementById('btn-prev');
 
@@ -236,11 +235,12 @@ function handleBtnPhotoFSClicked() {
     toggleDisplayPhotoFStoolbars();
 }
 
-function hidePhotoFStoolbars(hidden) {
-    for (const toolbar of gvDivPhotoFStoolbars) {toolbar.hidden = hidden;}
+function hidePhotoFStoolbars(hide) {
+    gvDivPhotoFSdivTop.style.visibility = hide ? 'hidden' : 'visible';
+    gvDivPhotoFSdivBottom.hidden = hide;
 }
 function toggleDisplayPhotoFStoolbars() {
-    hidePhotoFStoolbars(!gvDivPhotoFSdivTop.hidden);
+    hidePhotoFStoolbars(gvDivPhotoFSdivTop.style.visibility === 'visible');
 }
 
 function changePhotoFSSelIndx(direction) {
@@ -253,4 +253,14 @@ function changePhotoFSSelIndx(direction) {
 function updatePrevNextButtons() {
     gvDivPhotoFSbtnNext.style.visibility = gvThumbnailSelectedIndx === gvThumbnailLastIndx ? 'hidden' : 'visible';
     gvDivPhotoFSbtnPrev.style.visibility = gvThumbnailSelectedIndx === 0 ? 'hidden' : 'visible';
+}
+
+function sharePhotoFS() {
+    const imgDownload = gvDivThumbnails.children[gvThumbnailSelectedIndx];
+    const anchor = document.createElement('a');
+    anchor.href = imgDownload.getAttribute('data-jpegpath');
+    anchor.download = imgDownload.getAttribute('data-thumbname');
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
 }

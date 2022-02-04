@@ -25,6 +25,5 @@ let gvDivPhotoFS = null;
 let gvImgPhotoFS = null;
 let gvDivPhotoFSdivTop = null;
 let gvDivPhotoFSdivBottom = null;
-let gvDivPhotoFStoolbars = [];
 let gvDivPhotoFSbtnNext = null;
 let gvDivPhotoFSbtnPrev = null;

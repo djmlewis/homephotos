@@ -12,13 +12,13 @@
     <link rel="stylesheet" href="css/vendor/bootstrap.min.css">
 
     <!-- my css -->
-    <link rel="stylesheet" href="css/main.11.css">
+    <link rel="stylesheet" href="css/main.14.css">
 
     <!-- my scripts -->
     <script src="js/indexmedia.2.js" defer></script>
-    <script src="js/globals.3.js" defer></script>
+    <script src="js/globals.4.js" defer></script>
 
-    <script src="js/headscripts.6.js" defer></script>
+    <script src="js/headscripts.7.js" defer></script>
 
 
 </head>
@@ -50,9 +50,12 @@
             <div id="div-photoFS" class="bg-dark" style="height: 100%; width: 100%; overflow: hidden;">
                 <img id="img-photoFS" src="" alt="" onload="resizeImgFS()">
                 <button type="button" class="position-absolute top-0 start-0 w-100 h-100 bg-transparent" style="opacity: 0.0; border: 0 transparent;" onclick="handleBtnPhotoFSClicked()"> </button>
-                <div id="div-photoFS-divTop" class="position-absolute top-0 start-0 w-100">
-                    <span class="position-absolute start-50 top-50 text-white small" style="transform: translate(-50%, -50%);">Tap photo to hide / show buttons</span>
-                    <button type="button" class="btn btn-outline-warning float-end m-2" onclick="closePhotoFS()">Close</button>
+                <div id="div-photoFS-divTop" class="position-absolute top-0 start-0 w-100 bg-transparent d-flex flex-row flex-nowrap justify-content-between align-items-center">
+                    <div class="d-flex flex-row flex-nowrap justify-content-start align-items-center">
+                        <img class="cssImgShare" src="img/sharerup2.png" alt="" onclick="sharePhotoFS()">
+                    </div>
+                    <div class="flex-grow-1 text-center text-white small">Tap photo to hide / show buttons</div>
+                    <button type="button" class="btn btn-outline-warning m-2" onclick="closePhotoFS()">Close</button>
                 </div>
                 <div id="div-photoFS-divBottom" class="position-absolute bottom-0 start-0 w-100 bg-transparent">
                     <button id="btn-prev" type="button" class="btn btn-outline-warning float-start m-2" onclick="changePhotoFSSelIndx('prev')">&lt; Prev</button>
