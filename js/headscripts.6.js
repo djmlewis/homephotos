@@ -29,6 +29,12 @@ function setupGlobals() {
     gvModalPhoto = document.getElementById('modal-photo');
     gvDivPhotoFS = document.getElementById('div-photoFS');
     gvImgPhotoFS = document.getElementById('img-photoFS');
+    gvDivPhotoFSdivTop = document.getElementById('div-photoFS-divTop');
+    gvDivPhotoFSdivBottom = document.getElementById('div-photoFS-divBottom');
+    gvDivPhotoFStoolbars = [gvDivPhotoFSdivTop,gvDivPhotoFSdivBottom];
+    gvDivPhotoFSbtnNext = document.getElementById('btn-next');
+    gvDivPhotoFSbtnPrev = document.getElementById('btn-prev');
+
 }
 
 function buildYearButtons() {
@@ -120,36 +126,14 @@ function loadThumbnailsForDirectory(divClicked) {
     gvDivThumbnails.innerHTML = '';
     // dirkey obj is an array
     const dirkeyObj = gvIndexMediaObj[year][dirkey];
-    if(!!dirkeyObj) dirkeyObj.forEach((thumbName, indx) => {
-        gvDivThumbnails.appendChild(thumnNailDivForNameDirYear(thumbName, dirkey,year, indx));
-    });
-    gvDivThumbnails.scrollTop = 0;
-
-    /*
-        divThumbnails.innerHTML = '';
-        const btnIndexThumbs = document.getElementById('btn-ThumbsIndex');
-        btnIndexThumbs.innerText = 'Show Titles';
-        btnIndexThumbs.hidden = true;
-        if(year === kTitlesIndexName) {
-            btnIndexThumbs.hidden = true;
-            divThumbnails.innerHTML = gvIndexHTML;
-        } else {
-            btnIndexThumbs.hidden = year === kFavsName;//!isLandscape() || year === kFavsName;
-            const thumbNamesArray = year === kFavsName ? Object.keys(gvFavouritesObj) : gvIndexMediaObj[year];
-            thumbNamesArray.sort().forEach(thumbName => {
-                // the year for the favs thumbName is the value of the thumbName key in gvFavouritesObj
-                const actualYear = year === kFavsName ? gvFavouritesObj[thumbName] : year;
-                divThumbnails.appendChild(thumnNailDivForNameYear(thumbName, actualYear));
-            });
-            if (year === kFavsName) {
-                const favsdiv = document.createElement('div');
-                favsdiv.className = 'cssFavsMessage';
-                favsdiv.innerHTML = document.getElementById('div-favsbuttons').innerHTML;
-                divThumbnails.appendChild(favsdiv);
-            }
-        }
-        divThumbnails.scrollTop = 0;
-    */
+    if(!!dirkeyObj) {
+        gvThumbnailSelectedIndx = 0;
+        gvThumbnailLastIndx = dirkeyObj.length - 1;
+        dirkeyObj.forEach((thumbName, indx) => {
+            gvDivThumbnails.appendChild(thumnNailDivForNameDirYear(thumbName, dirkey, year, indx));
+        });
+        gvDivThumbnails.scrollTop = 0;
+    }
 }
 function thumnNailDivForNameDirYear(thumbName,dirkey, year,indx) {
     let img = document.createElement('img');
@@ -166,7 +150,8 @@ function thumnNailDivForNameDirYear(thumbName,dirkey, year,indx) {
 }
 function handleThumbnailClicked(ev) {
     gvImgPhotoFS.src = ev.target.getAttribute('data-jpegpath');
-    gvBootstrapModalPhoto.show();
+    gvThumbnailSelectedIndx = parseInt(ev.target.getAttribute('data-indx'));
+    showModalPhotoFS();
 }
 
 function resizeImgFS() {
@@ -236,26 +221,36 @@ function resizeColumns() {
         gvDivDirsOuter.style.height = (availableHeight * 0.25) + 'px';
         gvDivThumbnailsouter.style.height = (availableHeight * 0.75) + 'px';
     }
+}
 
-    /*
-        const colyears = document.getElementById('col-years');
-        const colthumbs = document.getElementById('col-thumbnails');
-        const innerheight = window.innerHeight;
-        // i dont trust reported col heights so have a special div video outer
-        const divvideoouter = document.getElementById('div-videoOuter');
-        const divYears = document.getElementById('div-years');
-        const btnThumbsIndex = document.getElementById('btn-ThumbsIndex');
-        btnThumbsIndex.hidden = indexIsSelectedYear() || favsIsSelectedYear();
-        if(isLandscape()) {
-            //alongside
-            colthumbs.style.height = innerheight + 'px';
-            colyears.style.height = innerheight + 'px';
-            btnThumbsIndex.style.marginTop = '6px';
-        } else {
-            // stacked
-            colthumbs.style.height = (innerheight - divYears.getBoundingClientRect().height - divvideoouter.getBoundingClientRect().height) + 'px';
-            colyears.style.height = 'auto';
-            btnThumbsIndex.style.marginTop = '0';
-        }
-    */
+function showModalPhotoFS() {
+    hidePhotoFStoolbars(false);
+    updatePrevNextButtons();
+    gvBootstrapModalPhoto.show();
+}
+function closePhotoFS() {
+    gvBootstrapModalPhoto.hide();
+}
+
+function handleBtnPhotoFSClicked() {
+    toggleDisplayPhotoFStoolbars();
+}
+
+function hidePhotoFStoolbars(hidden) {
+    for (const toolbar of gvDivPhotoFStoolbars) {toolbar.hidden = hidden;}
+}
+function toggleDisplayPhotoFStoolbars() {
+    hidePhotoFStoolbars(!gvDivPhotoFSdivTop.hidden);
+}
+
+function changePhotoFSSelIndx(direction) {
+    const increment = direction === 'next' ? 1 : -1;
+    gvThumbnailSelectedIndx = Math.max(0, Math.min(gvThumbnailLastIndx, gvThumbnailSelectedIndx + increment));
+    gvImgPhotoFS.src = gvDivThumbnails.children[gvThumbnailSelectedIndx].getAttribute('data-jpegpath');
+    updatePrevNextButtons();
+}
+
+function updatePrevNextButtons() {
+    gvDivPhotoFSbtnNext.style.visibility = gvThumbnailSelectedIndx === gvThumbnailLastIndx ? 'hidden' : 'visible';
+    gvDivPhotoFSbtnPrev.style.visibility = gvThumbnailSelectedIndx === 0 ? 'hidden' : 'visible';
 }

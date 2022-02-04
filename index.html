@@ -16,9 +16,9 @@
 
     <!-- my scripts -->
     <script src="js/indexmedia.2.js" defer></script>
-    <script src="js/globals.2.js" defer></script>
+    <script src="js/globals.3.js" defer></script>
 
-    <script src="js/headscripts.5.js" defer></script>
+    <script src="js/headscripts.6.js" defer></script>
 
 
 </head>
@@ -47,8 +47,17 @@
 <div id="modal-photo" class="modal" tabindex="-1">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
-            <div id="div-photoFS" class="bg-warning" style="height: 100%; width: 100%; overflow: hidden;">
+            <div id="div-photoFS" class="bg-dark" style="height: 100%; width: 100%; overflow: hidden;">
                 <img id="img-photoFS" src="" alt="" onload="resizeImgFS()">
+                <button type="button" class="position-absolute top-0 start-0 w-100 h-100 bg-transparent" style="opacity: 0.0; border: 0 transparent;" onclick="handleBtnPhotoFSClicked()"> </button>
+                <div id="div-photoFS-divTop" class="position-absolute top-0 start-0 w-100">
+                    <span class="position-absolute start-50 top-50 text-white small" style="transform: translate(-50%, -50%);">Tap photo to hide / show buttons</span>
+                    <button type="button" class="btn btn-outline-warning float-end m-2" onclick="closePhotoFS()">Close</button>
+                </div>
+                <div id="div-photoFS-divBottom" class="position-absolute bottom-0 start-0 w-100 bg-transparent">
+                    <button id="btn-prev" type="button" class="btn btn-outline-warning float-start m-2" onclick="changePhotoFSSelIndx('prev')">&lt; Prev</button>
+                    <button id="btn-next" type="button" class="btn btn-outline-warning float-end m-2" onclick="changePhotoFSSelIndx('next')">Next &gt;</button>
+                </div>
             </div>
 <!--
             <div class="position-absolute top-0">

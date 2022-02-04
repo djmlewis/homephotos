@@ -10,6 +10,7 @@ let gvResizeTimer;
 
 let gvModalPhotoIsShown = false;
 let gvThumbnailSelectedIndx = 0;
+let gvThumbnailLastIndx = 0;
 
 let gvBootstrapModalPhoto = null;
 let gvColYears = null;
@@ -22,3 +23,8 @@ let gvDivThumbnails = null;
 let gvModalPhoto = null;
 let gvDivPhotoFS = null;
 let gvImgPhotoFS = null;
+let gvDivPhotoFSdivTop = null;
+let gvDivPhotoFSdivBottom = null;
+let gvDivPhotoFStoolbars = [];
+let gvDivPhotoFSbtnNext = null;
+let gvDivPhotoFSbtnPrev = null;
