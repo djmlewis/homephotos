@@ -1,4 +1,3 @@
-const ls_autoplay = "ls_autoplay";
 const ls_favourites = "ls_favourites1";
 const ls_yearButtonName = "ls_yearButtonName";
 const ls_dirDivName = "ls_divButtonName";
@@ -27,3 +26,8 @@ let gvDivPhotoFSdivTop = null;
 let gvDivPhotoFSdivBottom = null;
 let gvDivPhotoFSbtnNext = null;
 let gvDivPhotoFSbtnPrev = null;
+let gvImgFavourite = null;
+
+const gvJPEGfolderName = 'media/jpegs/';
+
+let gvFavouritesObj = {};

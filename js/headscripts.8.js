@@ -33,11 +33,12 @@ function setupGlobals() {
     gvDivPhotoFSdivBottom = document.getElementById('div-photoFS-divBottom');
     gvDivPhotoFSbtnNext = document.getElementById('btn-next');
     gvDivPhotoFSbtnPrev = document.getElementById('btn-prev');
-
+    gvImgFavourite = document.getElementById('img-favourite');
 }
 
 function buildYearButtons() {
     gvDivYears.innerHTML = '';
+    gvDivDirs.innerHTML = '';
     Object.keys(gvIndexMediaObj).sort().forEach(yearName=>{
         let btn = document.createElement('div');
         const favCSS = yearName === kFavsName ? ' cssYearBtnFavs' : '';
@@ -47,31 +48,38 @@ function buildYearButtons() {
         btn.onclick = handleYearClicked;
         gvDivYears.appendChild(btn);
     });
-    addIndexYearButton(gvDivYears);
+
     // set the selected year
     const btns = Array.from(gvDivYears.getElementsByClassName('cssYearBtn'));
     let prefBtn = btns[0];
     // select the last used if available or keep first button
-    const savedYear = localStorage.getItem(ls_yearButtonName);
+    let savedYear = localStorage.getItem(ls_yearButtonName);
     if (!!savedYear) {
         const savedBtn = btns.find(element => element.innerText === savedYear);
         if(!!savedBtn) prefBtn = savedBtn;
+    } else {
+        savedYear = prefBtn.innerText;
+        localStorage.setItem(ls_yearButtonName,savedYear);
     }
     toggleYearBtnSelected(prefBtn,true);
-    // add its dirs
-    loadDirectoriesForYear(prefBtn.getAttribute('data-year'));
-    // select prev dir if available
-    const dirs = Array.from(gvDivDirs.getElementsByClassName('cssIndexRow'));
-    let prefDirDiv = dirs[0];
-    const savedDir = localStorage.getItem(ls_dirDivName);
-    if (!!savedDir) {
-        const savedDirDiv = dirs.find(element => element.getAttribute('data-dirkey') === savedDir);
-        if(!!savedDirDiv) {
-            prefDirDiv = savedDirDiv;
+    // if not Favs add its dirs
+    if(savedYear !== kFavsName) {
+        loadDirectoriesForYear(prefBtn.getAttribute('data-year'));
+        // select prev dir if available
+        const dirs = Array.from(gvDivDirs.getElementsByClassName('cssIndexRow'));
+        let prefDirDiv = dirs[0];
+        const savedDir = localStorage.getItem(ls_dirDivName);
+        if (!!savedDir) {
+            const savedDirDiv = dirs.find(element => element.getAttribute('data-dirkey') === savedDir);
+            if (!!savedDirDiv) {
+                prefDirDiv = savedDirDiv;
+            }
         }
+        updateDirDivSelected(prefDirDiv, true);
+        loadThumbnailsForDirectory(prefDirDiv);
+    } else {
+        loadThumbnailsForFavs();
     }
-    updateDirDivSelected(prefDirDiv,true);
-    loadThumbnailsForDirectory(prefDirDiv);
 }
 
 function addIndexYearButton(divYears) {
@@ -99,6 +107,7 @@ function clearYearButtonSelected() {
 
 function loadDirectoriesForYear(year) {
     gvDivDirs.innerHTML = '';
+    gvDivThumbnails.innerHTML = '';
     Object.keys(gvIndexMediaObj[year]).sort().forEach((dirkey,indx) => {
             const div = document.createElement('div');
             div.setAttribute('data-year',year);
@@ -113,7 +122,7 @@ function loadDirectoriesForYear(year) {
 
 function handleDirDivClicked(ev) {
     const divClicked = ev.target;
-    localStorage.setItem(ls_dirDivName,divClicked.getAttribute('data-dirkey'));
+    localStorage.setItem(ls_dirDivName, divClicked.getAttribute('data-dirkey'));
     loadThumbnailsForDirectory(divClicked);
     clearAllsDirButtonsSelected();
     updateDirDivSelected(divClicked,true);
@@ -129,28 +138,64 @@ function loadThumbnailsForDirectory(divClicked) {
         gvThumbnailSelectedIndx = 0;
         gvThumbnailLastIndx = dirkeyObj.length - 1;
         dirkeyObj.forEach((thumbName, indx) => {
-            gvDivThumbnails.appendChild(thumnNailDivForNameDirYear(thumbName, dirkey, year, indx));
+            gvDivThumbnails.appendChild(thumnNailDivForNameDirYear(year,dirkey,thumbName,indx));
         });
         gvDivThumbnails.scrollTop = 0;
     }
 }
-function thumnNailDivForNameDirYear(thumbName,dirkey, year,indx) {
+
+function loadThumbnailsForFavs() {
+    gvDivDirs.innerHTML = '';
+    gvDivThumbnails.innerHTML = '';
+    gvThumbnailSelectedIndx = 0;
+    const favouritesObjKeys = Object.keys(gvFavouritesObj);
+    gvThumbnailLastIndx = favouritesObjKeys.length - 1;
+    favouritesObjKeys.forEach((fqfn, indx) => {
+        gvDivThumbnails.appendChild(thumnNailDivFoFQFN(fqfn, indx));
+    });
+    gvDivThumbnails.scrollTop = 0;
+}
+
+function thumnNailDivFoFQFN(fqfn, indx) {
     let img = document.createElement('img');
     img.className = 'cssThumbnailImage'; //ratio ratio-4x3
-    const jpegpath = 'media/jpegs/'+year+'/'+dirkey+'/'+thumbName;
+    const jpegpath = gvFavouritesObj[fqfn];
     img.src = jpegpath;
-    img.setAttribute('data-thumbName',thumbName);
-    img.setAttribute('data-year',year);
-    img.setAttribute('data-dirkey',dirkey);
+    const ydtArray = ydtArrayFromFQfavsName(fqfn);
+    img.setAttribute('data-year',ydtArray[0]);
+    img.setAttribute('data-dirkey',ydtArray[1]);
+    img.setAttribute('data-fqfavname',fqfn);
     img.setAttribute('data-jpegpath',jpegpath);
     img.setAttribute('data-indx',String(indx));
     img.onclick = handleThumbnailClicked;
     return img;
 }
+
+
+function thumnNailDivForNameDirYear(year,dirkey,thumbName,indx) {
+    let img = document.createElement('img');
+    img.className = 'cssThumbnailImage'; //ratio ratio-4x3
+    const jpegpath = jpegPathForYDTarray([year,dirkey,thumbName]);
+    img.src = jpegpath;
+    img.setAttribute('data-year',year);
+    img.setAttribute('data-dirkey',dirkey);
+    img.setAttribute('data-fqfavname',fqFavsNameFromYDTarray([year, dirkey,thumbName]));
+    img.setAttribute('data-jpegpath',jpegpath);
+    img.setAttribute('data-indx',String(indx));
+    img.onclick = handleThumbnailClicked;
+    return img;
+}
+
+
 function handleThumbnailClicked(ev) {
-    gvImgPhotoFS.src = ev.target.getAttribute('data-jpegpath');
+    setPhotoFSImageWithThumbnail(ev.target);
     gvThumbnailSelectedIndx = parseInt(ev.target.getAttribute('data-indx'));
     showModalPhotoFS();
+}
+
+function setPhotoFSImageWithThumbnail(img) {
+    gvImgPhotoFS.src = img.getAttribute('data-jpegpath');
+    gvImgPhotoFS.setAttribute('data-fqfavname',img.getAttribute('data-fqfavname'));
 }
 
 function resizeImgFS() {
@@ -178,7 +223,8 @@ function handleYearClicked(ev) {
     toggleYearBtnSelected(ev.target,true);
     const year = ev.target.getAttribute('data-year');
     localStorage.setItem(ls_yearButtonName,year);
-    loadDirectoriesForYear(year);
+    if(year === kFavsName) loadThumbnailsForFavs();
+    else loadDirectoriesForYear(year);
 }
 
 function clearAllsDirButtonsSelected() {
@@ -246,7 +292,7 @@ function toggleDisplayPhotoFStoolbars() {
 function changePhotoFSSelIndx(direction) {
     const increment = direction === 'next' ? 1 : -1;
     gvThumbnailSelectedIndx = Math.max(0, Math.min(gvThumbnailLastIndx, gvThumbnailSelectedIndx + increment));
-    gvImgPhotoFS.src = gvDivThumbnails.children[gvThumbnailSelectedIndx].getAttribute('data-jpegpath');
+    setPhotoFSImageWithThumbnail(gvDivThumbnails.children[gvThumbnailSelectedIndx]);
     updatePrevNextButtons();
 }
 

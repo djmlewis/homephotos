@@ -16,9 +16,10 @@
 
     <!-- my scripts -->
     <script src="js/indexmedia.2.js" defer></script>
-    <script src="js/globals.4.js" defer></script>
-
-    <script src="js/headscripts.7.js" defer></script>
+    <script src="js/globals.5.js" defer></script>
+<!--    favourites before headscripts, but after indexmedia-->
+    <script src="js/favourites.1.js" defer></script>
+    <script src="js/headscripts.8.js" defer></script>
 
 
 </head>
@@ -53,6 +54,7 @@
                 <div id="div-photoFS-divTop" class="position-absolute top-0 start-0 w-100 bg-transparent d-flex flex-row flex-nowrap justify-content-between align-items-center">
                     <div class="d-flex flex-row flex-nowrap justify-content-start align-items-center">
                         <img class="cssImgShare" src="img/sharerup2.png" alt="" onclick="sharePhotoFS()">
+                        <img id="img-favourite" class="cssImgShare" src="img/emptyHeart1.png" alt="" onclick="handleFavouriteClicked()">
                     </div>
                     <div class="flex-grow-1 text-center text-white small">Tap photo to hide / show buttons</div>
                     <button type="button" class="btn btn-outline-warning m-2" onclick="closePhotoFS()">Close</button>
