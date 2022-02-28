@@ -26,6 +26,7 @@ let gvDivPhotoFSdivTop = null;
 let gvDivPhotoFSdivBottom = null;
 let gvDivPhotoFSbtnNext = null;
 let gvDivPhotoFSbtnPrev = null;
+let gvDivPhotoFSFQFN = null;
 let gvImgFavourite = null;
 
 const gvJPEGfolderName = 'media/jpegs/';

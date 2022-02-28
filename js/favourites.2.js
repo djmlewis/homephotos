@@ -4,34 +4,21 @@ function loadFavourites() {
     if (!localStorage.getItem(ls_favourites)) localStorage.setItem(ls_favourites, JSON.stringify(gvFavouritesObj));
     else gvFavouritesObj = JSON.parse(localStorage.getItem(ls_favourites));
     gvIndexMediaObj[kFavsName] = [];//actually ignored just a placeholder for the tab
-
 }
 
 function saveFavourites() {
     localStorage.setItem(ls_favourites, JSON.stringify(gvFavouritesObj));
 }
 
-function fqFavsNameFromYDTarray(ydtArray) {
-    return ydtArray.join('\t');
-}
-function ydtArrayFromFQfavsName(fqFavName) {
-    return fqFavName.split('\t');
-}
-function jpegPathForYDTarray(ydtArray) {
-    return gvJPEGfolderName + ydtArray.join('/');
-}
-
-function addNameToFavourites() {
+function addgvImgPhotoFSToFavourites() {
     const fqFavName = gvImgPhotoFS.getAttribute('data-fqfavname');
-    gvFavouritesObj[fqFavName] = jpegPathForYDTarray(ydtArrayFromFQfavsName(fqFavName));
+    gvFavouritesObj[fqFavName] = jpegPathForFQFN(fqFavName);
     saveFavourites();
-    // if yearFavs is active then this does nothing so no need to update thumbnails
 }
 
 function deleteNameFromFavourites(fqFavName) {
     delete gvFavouritesObj[fqFavName];
     saveFavourites();
-    //if(favsIsSelectedYear()) loadThumbnailsForFavs();
 }
 
 function isFavourite(fqFavName) {
@@ -50,25 +37,33 @@ function updateFavouriteIconForStatus(isFavourite) {
     }
 }
 
+function updateFavouriteIconForFQFN(fqFavName) {
+    if(isFavourite(fqFavName)) {
+        gvImgFavourite.src = "img/filledHeart1.png";
+        gvImgFavourite.alt = "Favourite";
+        gvImgFavourite.title = "Tap to unfavourite";
+    } else {
+        gvImgFavourite.src = "img/emptyHeart1.png";
+        gvImgFavourite.alt = "";
+        gvImgFavourite.title = "Tap to make favourite";
+    }
+}
+
 function handleFavouriteClicked() {
     const fqFavName = gvImgPhotoFS.getAttribute('data-fqfavname');
     const isFav = isFavourite(fqFavName);
+    // toggle the status - so invert actions
+    updateFavouriteIconForStatus(!isFav);
     if(isFav) {
         deleteNameFromFavourites(fqFavName);
-    } else
-    {
-        addNameToFavourites(fqFavName);
+    } else {
+        addgvImgPhotoFSToFavourites(fqFavName);
     }
-
-    /*
-    const selectedYearDiv = document.getElementById('div-years').getElementsByClassName('cssYearSelected').item(0);
     // refresh the Favs thumbs if displayed
+    const selectedYearDiv = document.getElementById('div-years').getElementsByClassName('cssYearSelected').item(0);
     if(selectedYearDiv && selectedYearDiv.innerText === kFavsName) {
-        loadThumbnailsForYear(kFavsName);
+        loadThumbnailsForFavs();
     }
-     */
-    // have to toggle isFav as we are toggling status based on it
-    updateFavouriteIconForStatus(!isFav);
 }
 
 function exportFavourites() {
