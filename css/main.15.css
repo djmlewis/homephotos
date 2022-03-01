@@ -61,7 +61,8 @@ body {
     cursor: auto;
     border-radius: 2px;
 }
-.cssIndexRow {
+
+.cssDivDir {
     font-size: medium;
     text-align: left;
     color: whitesmoke;
@@ -71,7 +72,8 @@ body {
     padding: 10px 14px;
     border-radius: 4px;
     text-transform: capitalize;
-    margin-bottom: 6px;
+    margin: 0 4px 6px 4px;
+    /*margin-bottom: 6px;*/
     background-color: #313131;!important;
 }
 .cssDirSelected {

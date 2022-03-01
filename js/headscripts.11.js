@@ -65,7 +65,7 @@ function buildYearButtons() {
     } else {
         loadDirectoriesForYear(prefBtn.getAttribute('data-year'));
         // select prev dir if available
-        const dirs = Array.from(gvDivDirs.getElementsByClassName('cssIndexRow'));
+        const dirs = Array.from(gvDivDirs.getElementsByClassName('cssDivDir'));
         let prefDirDiv = dirs[0];
         const savedDir = localStorage.getItem(ls_dirDivName);
         if (!!savedDir) {
@@ -97,7 +97,7 @@ function loadDirectoriesForYear(year) {
             div.setAttribute('data-dirkey',dirkey);
             div.setAttribute('data-indx',String(indx));
             div.innerText = dirkey;
-            div.className = "cssIndexRow";
+            div.className = "cssDivDir";
             div.onclick = handleDirDivClicked;
         gvDivDirs.appendChild(div);
         });
@@ -147,7 +147,7 @@ function toggleYearBtnSelected(btn,selected) {
 }
 
 function clearAllsDirButtonsSelected() {
-    for(const btn of gvDivDirs.getElementsByClassName('cssIndexRow')) btn.classList.remove('cssDirSelected');
+    for(const btn of gvDivDirs.getElementsByClassName('cssDivDir')) btn.classList.remove('cssDirSelected');
 }
 
 function updateDirDivSelected(btn,selected) {
