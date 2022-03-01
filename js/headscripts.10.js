@@ -204,13 +204,13 @@ function isLandscape() {
 function resizeColumns() {
     if(isLandscape()) {
         //alongside
+        gvDivDirsOuter.style.height = (window.innerHeight - gvDivYears.getBoundingClientRect().height) + 'px';
         gvDivThumbnailsouter.style.height = window.innerHeight + 'px';
-        //gvDivDirsOuter.style.height = availableHeight + 'px';
     } else {
         // stacked
-        //gvDivDirsOuter.style.height = (availableHeight * 0.25) + 'px';
-        const availableHeight = window.innerHeight - gvColYears.getBoundingClientRect().height;// gvDivYears.getBoundingClientRect().height;
-        gvDivThumbnailsouter.style.height = availableHeight + 'px'; //(availableHeight * 0.75) + 'px';
+        gvDivDirsOuter.style.height = "";
+        //const availableHeight = window.innerHeight - gvColYears.getBoundingClientRect().height;// gvDivYears.getBoundingClientRect().height;
+        gvDivThumbnailsouter.style.height = (window.innerHeight - gvColYears.getBoundingClientRect().height) + 'px'; //(availableHeight * 0.75) + 'px';
     }
 }
 
