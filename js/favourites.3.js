@@ -1,5 +1,14 @@
+// utils
+function favsIsSelectedYear() {
+    const selectedYearDiv = gvDivYears.getElementsByClassName('cssYearSelected').item(0);
+    return (selectedYearDiv && selectedYearDiv.innerText === kFavsName);
+}
 
+function FQFNisFavourite(fqFavName) {
+    return gvFavouritesObj.hasOwnProperty(fqFavName);
+}
 
+// cached
 function loadFavourites() {
     if (!localStorage.getItem(ls_favourites)) localStorage.setItem(ls_favourites, JSON.stringify(gvFavouritesObj));
     else gvFavouritesObj = JSON.parse(localStorage.getItem(ls_favourites));
@@ -8,6 +17,23 @@ function loadFavourites() {
 
 function saveFavourites() {
     localStorage.setItem(ls_favourites, JSON.stringify(gvFavouritesObj));
+}
+
+// add remove Favourite
+function handleFavouriteClicked() {
+    const fqFavName = gvImgPhotoFS.getAttribute('data-fqfavname');
+    const isFav = FQFNisFavourite(fqFavName);
+    // toggle the status - so invert actions
+    updateFavouriteIconForStatus(!isFav);
+    if(isFav) {
+        deleteNameFromFavourites(fqFavName);
+    } else {
+        addgvImgPhotoFSToFavourites(fqFavName);
+    }
+    // refresh the Favs thumbs if displayed
+    if(favsIsSelectedYear()) {
+        loadThumbnailsForFavs();
+    }
 }
 
 function addgvImgPhotoFSToFavourites() {
@@ -21,10 +47,7 @@ function deleteNameFromFavourites(fqFavName) {
     saveFavourites();
 }
 
-function isFavourite(fqFavName) {
-    return gvFavouritesObj.hasOwnProperty(fqFavName);
-}
-
+// fav Icon status
 function updateFavouriteIconForStatus(isFavourite) {
     if(isFavourite) {
         gvImgFavourite.src = "img/filledHeart1.png";
@@ -38,7 +61,7 @@ function updateFavouriteIconForStatus(isFavourite) {
 }
 
 function updateFavouriteIconForFQFN(fqFavName) {
-    if(isFavourite(fqFavName)) {
+    if(FQFNisFavourite(fqFavName)) {
         gvImgFavourite.src = "img/filledHeart1.png";
         gvImgFavourite.alt = "Favourite";
         gvImgFavourite.title = "Tap to unfavourite";
@@ -49,20 +72,25 @@ function updateFavouriteIconForFQFN(fqFavName) {
     }
 }
 
-function handleFavouriteClicked() {
-    const fqFavName = gvImgPhotoFS.getAttribute('data-fqfavname');
-    const isFav = isFavourite(fqFavName);
-    // toggle the status - so invert actions
-    updateFavouriteIconForStatus(!isFav);
-    if(isFav) {
-        deleteNameFromFavourites(fqFavName);
-    } else {
-        addgvImgPhotoFSToFavourites(fqFavName);
+// import export clear Btns
+function handleClearFavsClicked() {
+    if (window.confirm("Clear favourites? This cannot be undone.")) {
+        for (const prop of Object.getOwnPropertyNames(gvFavouritesObj)) {
+            delete gvFavouritesObj[prop];
+        }
+        saveFavourites();
+        if (favsIsSelectedYear()) loadThumbnailsForFavs();
     }
-    // refresh the Favs thumbs if displayed
-    const selectedYearDiv = document.getElementById('div-years').getElementsByClassName('cssYearSelected').item(0);
-    if(selectedYearDiv && selectedYearDiv.innerText === kFavsName) {
-        loadThumbnailsForFavs();
+}
+
+function handleFavsImportExportClicked(itemID) {
+    switch (itemID) {
+        case 'savefavs':
+            exportFavourites();
+            break;
+        case 'loadfavs':
+            displayFavouritesFileDialog();
+            break;
     }
 }
 
@@ -72,12 +100,17 @@ function exportFavourites() {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = 'homeMoviesFavourites.json';
+    anchor.download = 'homePhotosFavourites.json';
     document.body.appendChild(anchor);
     anchor.click();
     document.body.removeChild(anchor);
     URL.revokeObjectURL(url);
 }
+
+function displayFavouritesFileDialog() {
+    document.getElementById('fileElemFavourites').click();
+}
+
 function handleFavouritesFileElementChanged(element) {
     if(element.files.length > 0) {
         element.files[0].text().then(text => {
@@ -85,26 +118,15 @@ function handleFavouritesFileElementChanged(element) {
             if(!!favsOj) {
                 for (const [key, value] of Object.entries(favsOj)) gvFavouritesObj[key] = value;
                 saveFavourites();
-                if(favsIsSelectedYear()) loadThumbnailsForYear(kFavsName);
+                if(favsIsSelectedYear()) loadThumbnailsForFavs();
             }
         });
     }
 }
 
-function favsIsSelectedYear() {
-    return selectedYearButtonIsNamed(kFavsName);
-}
 
-function displayFavouritesFileDialog() {
-    document.getElementById('fileElemFavourites').click();
-}
 
-function handleClearFavsClicked() {
-    for (const prop of Object.getOwnPropertyNames(gvFavouritesObj)) {
-        delete gvFavouritesObj[prop];
-    }
-    saveFavourites();
-    if(favsIsSelectedYear()) loadThumbnailsForYear(kFavsName);
-}
+
+
 
 loadFavourites();

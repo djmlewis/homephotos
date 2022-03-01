@@ -12,15 +12,15 @@
     <link rel="stylesheet" href="css/vendor/bootstrap.min.css">
 
     <!-- my css -->
-    <link rel="stylesheet" href="css/main.15.css">
+    <link rel="stylesheet" href="css/main.16.css">
 
     <!-- my scripts -->
     <script src="js/indexmedia.3.js" defer></script>
-    <script src="js/globals.6.js" defer></script>
+    <script src="js/globals.7.js" defer></script>
     <script src="js/utils.1.js" defer></script>
 <!--    favourites before headscripts, but after indexmedia-->
-    <script src="js/favourites.2.js" defer></script>
-    <script src="js/headscripts.11.js" defer></script>
+    <script src="js/favourites.3.js" defer></script>
+    <script src="js/headscripts.12.js" defer></script>
 
 
 </head>
@@ -39,11 +39,21 @@
                 <div class="text-white text-center bg-danger p-3">This app requires that JavaScript be enabled - use your device or browser settings to enable JavaScript, and then reload this page.</div>
             </noscript>
             <div id="div-thumbnailsouter" class="cssDivYears">
+                <div hidden id="div-thumbnails-favBtns" class="w-100 sticky-top bg-black rounded-1 text-white-50 small px-2 py-1">
+                    <div class="d-flex flex-row flex-nowrap justify-content-center align-items-center">
+                        <div class="me-2 text-white-50 small">Favourites</div>
+                        <button type="button" class="btn btn-warning btn-sm" onclick="handleFavsImportExportClicked('savefavs')"><img src="img/sharerup1black.png" alt="" class="cssImgShare"></button>
+                        <button type="button" class="btn btn-warning btn-sm mx-1"  onclick="handleFavsImportExportClicked('loadfavs')"><img src="img/sharedownblack.png" alt="" class="cssImgShare"></button>
+                        <button type="button" class="btn btn-warning btn-sm" onclick="handleClearFavsClicked()"> <img src="img/clearBlack.png" alt="" class="cssImgShare">︎</button>
+                    </div>
+                </div>
                 <div id="div-thumbnails" class="cssDivThumbnails flex-shrink-1 d-flex flex-row flex-wrap align-items-center justify-content-center"></div>
             </div>
         </div>
     </div>
 </div>
+
+<input type="file" id="fileElemFavourites"  accept=".json" style="display:none" onchange="handleFavouritesFileElementChanged(this)">
 
 </body>
 <div id="modal-photo" class="modal" tabindex="-1">

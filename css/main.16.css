@@ -178,7 +178,7 @@ body {
 .cssImgFavourite,.cssImgShare {
     cursor: pointer;
     pointer-events: all;
-    max-height: 30px;
+    max-height: 20px;
     margin: 2px 12px;
 }
 

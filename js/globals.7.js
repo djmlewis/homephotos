@@ -18,6 +18,7 @@ let gvDivDirsOuter = null;
 let gvDivDirs = null;
 let gvColThumbnails = null;
 let gvDivThumbnailsouter = null;
+let gvDivThumbnailsFavBtns = null;
 let gvDivThumbnails = null;
 let gvModalPhoto = null;
 let gvDivPhotoFS = null;

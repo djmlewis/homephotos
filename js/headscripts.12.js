@@ -19,6 +19,7 @@ function setupGlobals() {
     gvDivDirs = document.getElementById('div-dirs');
     gvColThumbnails = document.getElementById('col-thumbnails');
     gvDivThumbnailsouter = document.getElementById('div-thumbnailsouter');
+    gvDivThumbnailsFavBtns = document.getElementById('div-thumbnails-favBtns');
     gvDivThumbnails = document.getElementById('div-thumbnails');
     gvModalPhoto = document.getElementById('modal-photo');
     gvDivPhotoFS = document.getElementById('div-photoFS');
@@ -89,6 +90,7 @@ function addIndexYearButton(divYears) {
 }
 
 function loadDirectoriesForYear(year) {
+    gvDivThumbnailsFavBtns.hidden = true;
     gvDivDirs.innerHTML = '';
     gvDivThumbnails.innerHTML = '';
     Object.keys(gvIndexMediaObj[year]).sort().forEach((dirkey,indx) => {
@@ -120,6 +122,7 @@ function loadThumbnailsForDirectory(divClicked) {
 }
 
 function loadThumbnailsForFavs() {
+    gvDivThumbnailsFavBtns.hidden = false;
     gvDivDirs.innerHTML = '';
     gvDivThumbnails.innerHTML = '';
     gvThumbnailSelectedIndx = 0;
