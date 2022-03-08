@@ -192,6 +192,7 @@ body {
     padding: 4px;
     margin: 0;
     border-radius: 4px;
+    break-inside: avoid-column;
 }
 
 .cssDivIndexRows > p:nth-child(odd){
