@@ -195,10 +195,10 @@ body {
     break-inside: avoid-column;
 }
 
-.cssDivIndexRows > p:nth-child(odd){
+.E:nth-child(odd){
     background:#424242;
 }
-.cssDivIndexRows > p:nth-child(even){
+.E:nth-child(even){
     background: black;
 }
 
@@ -209,13 +209,14 @@ body {
 .cssBanding:nth-child(even){
     background: black;
 }
+*/
 .cssParaOdd {
-    background-color: #313131;!important;
+    background-color: #424242;!important;
 }
 .cssParaEven {
-    background-color: #212121;!important;
+    background-color: black;!important;
 }
- */
+
 
 .cssDivIndexSearch {
     background-color: #212121;

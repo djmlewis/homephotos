@@ -12,15 +12,15 @@
     <link rel="stylesheet" href="css/vendor/bootstrap.min.css">
 
     <!-- my css -->
-    <link rel="stylesheet" href="css/main.19.css">
+    <link rel="stylesheet" href="css/main.20.css">
 
     <!-- my scripts -->
-    <script src="js/indexmedia.12.js" defer></script>
-    <script src="js/gvDirYearsHTML.11.js" defer></script>
+    <script src="js/indexmedia.13.js" defer></script>
+    <script src="js/gvDirYearsHTML.12.js" defer></script>
     <script src="js/globals.8.js" defer></script>
     <script src="js/utils.1.js" defer></script>
 <!--    favourites before headscripts, but after indexmedia-->
-    <script src="js/favourites.5.js" defer></script>
+    <script src="js/favourites.6.js" defer></script>
     <script src="js/headscripts.14.js" defer></script>
 
 
@@ -51,6 +51,17 @@
                     </div>
                 </div>
                 <div hidden id="div-indexRowsOuter">
+                    <div id="div-indexSearch" class= "sticky-top cssDivIndexSearch">
+                        <div class= "btn-group" role="group" style="min-width:100%;" >
+                            <input type="text" id="input-searchlegend" class="form-control"
+                                   placeholder="Type to search index…"
+                                   title="Text to find in events name (exact match)"
+                                   oninput="searchIndexFromSearchInput()">
+                            <button class="btn btn-secondary btn-sm" type="button"
+                                    onclick="clearSearchIndex()"
+                                    title="Clear search text">Clear</button>
+                        </div>
+                    </div>
                     <div id="div-indexRows" class="cssDivIndexRows"></div>
                 </div>
                 <div id="div-thumbnails" class="cssDivThumbnails flex-shrink-1 d-flex flex-row flex-wrap align-items-center justify-content-center"></div>

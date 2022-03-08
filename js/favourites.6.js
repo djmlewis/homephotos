@@ -144,5 +144,36 @@ function loadThumbnailsForDirYear(diryear) {
 }
 
 
+function searchIndexFromSearchInput() {
+    const searchStr = document.getElementById("input-searchlegend").value.toLowerCase();
+    //const divIndexRows = document.getElementById("div-indexRows");
+    if (searchStr.length > 0) {
+        let counter = 1;
+        Array.from(gvDivIndexRows.getElementsByTagName('p')).forEach((para)=>{
+            const found = para.innerText.toLowerCase().includes(searchStr) === true;
+            para.hidden = !found;
+            para.classList.remove('E');
+            if(counter % 2 === 0) {
+                para.classList.remove('cssParaOdd');
+                para.classList.add('cssParaEven');
+            } else {
+                para.classList.add('cssParaOdd');
+                para.classList.remove('cssParaEven');
+            }
+            if(found) counter++;
+        });
+    } else clearSearchIndex();
+}
 
+function clearSearchIndex() {
+    document.getElementById("input-searchlegend").value = '';
+    Array.from(gvDivIndexRows.getElementsByTagName("p")).forEach(para=>{
+        para.hidden = false;
+        para.classList.remove('cssParaOdd');
+        para.classList.remove('cssParaEven');
+        para.classList.add('E');
+    });
+}
+
+// **** LOAD THE FAvourites ****** //
 loadFavourites();
