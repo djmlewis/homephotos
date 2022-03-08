@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', function () {
     gvModalPhoto.addEventListener('hidden.bs.modal', ()=>{gvModalPhotoIsShown = false;});
     gvModalPhoto.addEventListener('shown.bs.modal', ()=>{gvModalPhotoIsShown = true;});
     buildYearButtons();
+    gvDivIndexRows.innerHTML = gvDirYearsHTML;
+    gvDivIndexRows.onclick = handleDivIndexRowClicked;
 });
 // call these functions on page fully loaded  -- DOMContentLoaded on DOCUMENT, onload on WINDOW
     window.addEventListener('load', function () {
@@ -19,6 +21,8 @@ function setupGlobals() {
     gvDivDirs = document.getElementById('div-dirs');
     gvColThumbnails = document.getElementById('col-thumbnails');
     gvDivThumbnailsouter = document.getElementById('div-thumbnailsouter');
+    gvDivIndexRows = document.getElementById('div-indexRows');
+    gvDivIndexRowsOuter = document.getElementById('div-indexRowsOuter');
     gvDivThumbnailsFavBtns = document.getElementById('div-thumbnails-favBtns');
     gvDivThumbnails = document.getElementById('div-thumbnails');
     gvModalPhoto = document.getElementById('modal-photo');
@@ -46,6 +50,7 @@ function buildYearButtons() {
         btn.onclick = handleYearClicked;
         gvDivYears.appendChild(btn);
     });
+    addIndexYearButton();
 
     // set the selected year
     const btns = Array.from(gvDivYears.getElementsByClassName('cssYearBtn'));
@@ -60,9 +65,36 @@ function buildYearButtons() {
         localStorage.setItem(ls_yearButtonName,savedYear);
     }
     toggleYearBtnSelected(prefBtn,true);
+
+    switch (savedYear) {
+        case kFavsName:
+            loadThumbnailsForFavs();
+            break;
+        case kTitlesIndexName:
+            loadIndexHTML();
+            break;
+        default:
+            loadDirectoriesForYear(prefBtn.getAttribute('data-year'));
+            // select prev dir if available
+            const dirs = Array.from(gvDivDirs.getElementsByClassName('cssDivDir'));
+            let prefDirDiv = dirs[0];
+            const savedDir = localStorage.getItem(ls_dirDivName);
+            if (!!savedDir) {
+                const savedDirDiv = dirs.find(element => element.getAttribute('data-dirkey') === savedDir);
+                if (!!savedDirDiv) {
+                    prefDirDiv = savedDirDiv;
+                }
+            }
+            updateDirDivSelected(prefDirDiv, true);
+            loadThumbnailsForDirectoryClicked(prefDirDiv);
+    }
+
+/*
     // if not Favs add its dirs
     if(savedYear === kFavsName) {
         loadThumbnailsForFavs();
+    } else if(savedYear === kTitlesIndexName) {
+        loadIndexHTML();
     } else {
         loadDirectoriesForYear(prefBtn.getAttribute('data-year'));
         // select prev dir if available
@@ -78,18 +110,20 @@ function buildYearButtons() {
         updateDirDivSelected(prefDirDiv, true);
         loadThumbnailsForDirectory(prefDirDiv);
     }
+*/
 }
 
-function addIndexYearButton(divYears) {
+function addIndexYearButton() {
     let btn = document.createElement('div');
     btn.className = 'cssYearBtn cssYearUnselected';
     btn.innerText = kTitlesIndexName;
     btn.setAttribute('data-year',kTitlesIndexName);
-    btn.onclick = (ev)=>{handleYearClicked(ev)};
-    divYears.appendChild(btn);
+    btn.onclick = handleYearClicked;
+    gvDivYears.appendChild(btn);
 }
 
 function loadDirectoriesForYear(year) {
+    displayDivsForIndex(false);
     gvDivThumbnailsFavBtns.hidden = true;
     gvDivDirs.innerHTML = '';
     gvDivThumbnails.innerHTML = '';
@@ -105,9 +139,11 @@ function loadDirectoriesForYear(year) {
         });
 }
 
-function loadThumbnailsForDirectory(divClicked) {
+function loadThumbnailsForDirectoryClicked(divClicked) {
     const year = divClicked.getAttribute('data-year');
     const dirkey = divClicked.getAttribute('data-dirkey');
+    gvDivThumbnailsFavBtns.hidden = true;
+
     gvDivThumbnails.innerHTML = '';
     // dirkey obj is an array
     const dirkeyObj = gvIndexMediaObj[year][dirkey];
@@ -122,15 +158,31 @@ function loadThumbnailsForDirectory(divClicked) {
 }
 
 function loadThumbnailsForFavs() {
-    gvDivThumbnailsFavBtns.hidden = false;
+    displayDivsForIndex(false);
     gvDivDirs.innerHTML = '';
     gvDivThumbnails.innerHTML = '';
     gvThumbnailSelectedIndx = 0;
+    gvDivThumbnailsFavBtns.hidden = false;
     const favouritesObjKeys = Object.keys(gvFavouritesObj);
     gvThumbnailLastIndx = favouritesObjKeys.length - 1;
     favouritesObjKeys.forEach((fqfn, indx) => {
         gvDivThumbnails.appendChild(thumnNailDivForFQFN(fqfn, indx));
     });
+    gvDivThumbnails.scrollTop = 0;
+}
+
+function displayDivsForIndex(showingIndex) {
+    gvDivThumbnailsFavBtns.hidden = showingIndex;
+    gvDivThumbnails.hidden = showingIndex;
+    gvDivIndexRowsOuter.hidden = !showingIndex;
+    gvDivThumbnailsFavBtns.hidden = showingIndex;
+}
+
+function loadIndexHTML() {
+    gvDivDirs.innerHTML = '';
+    gvDivThumbnails.innerHTML = '';
+    displayDivsForIndex(true);
+    gvThumbnailSelectedIndx = 0;
     gvDivThumbnails.scrollTop = 0;
 }
 
@@ -167,15 +219,25 @@ function handleYearClicked(ev) {
     toggleYearBtnSelected(ev.target,true);
     const year = ev.target.getAttribute('data-year');
     localStorage.setItem(ls_yearButtonName,year);
-    if(year === kFavsName) loadThumbnailsForFavs();
-    else loadDirectoriesForYear(year);
+
+    switch (year) {
+        case kFavsName:
+            loadThumbnailsForFavs();
+            break;
+        case kTitlesIndexName:
+            loadIndexHTML();
+            break;
+        default:
+            loadDirectoriesForYear(year);
+    }
+
     resizeColumns();// to account for divDirs being different height
 }
 
 function handleDirDivClicked(ev) {
     const divClicked = ev.target;
     localStorage.setItem(ls_dirDivName, divClicked.getAttribute('data-dirkey'));
-    loadThumbnailsForDirectory(divClicked);
+    loadThumbnailsForDirectoryClicked(divClicked);
     clearAllsDirButtonsSelected();
     updateDirDivSelected(divClicked,true);
 }

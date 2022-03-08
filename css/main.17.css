@@ -81,26 +81,6 @@ body {
     color: black;
 }
 
-
-.cssBanding:nth-child(odd){
-    background:#313131;
-}
-.cssBanding:nth-child(even){
-    background: black;
-}
-.cssParaOdd {
-    background-color: #313131;!important;
-}
-.cssParaEven {
-    background-color: #212121;!important;
-}
-.cssDivIndexSearch {
-    background-color: #212121;
-    color: whitesmoke;
-    width: 100%;
-    padding-bottom: 4px;
-}
-
 .cssSwitchAutoplay {
     color: var(--colour-selected,#ffc107);
 }
@@ -197,10 +177,59 @@ body {
     margin-bottom: 4px;
 }
 
+.cssDivIndexRows {
+    pointer-events: none;
+    cursor: auto;
+    column-count: 2;
+}
+.cssDivIndexRows > p {
+    font-size: medium;
+    text-align: left;
+    color: whitesmoke;
+    pointer-events: all;
+    cursor: pointer;
+    line-height: 1.1;
+    padding: 2px;
+    margin: 0;
+    border-radius: 4px;
+}
+
+.cssDivIndexRows > p:nth-child(odd){
+    background:#424242;
+}
+.cssDivIndexRows > p:nth-child(even){
+    background: black;
+}
+
+/*
+.cssBanding:nth-child(odd){
+    background:#313131;
+}
+.cssBanding:nth-child(even){
+    background: black;
+}
+.cssParaOdd {
+    background-color: #313131;!important;
+}
+.cssParaEven {
+    background-color: #212121;!important;
+}
+ */
+
+.cssDivIndexSearch {
+    background-color: #212121;
+    color: whitesmoke;
+    width: 100%;
+    padding-bottom: 4px;
+}
 
 /* *** WHEN PHONE LANDSCAPE or wider *** */
 @media (min-width: 768px) {
     .cssThumbnailImage {
         height: 30vh;
     }
+    .cssDivIndexRows {
+        column-count: 3;
+    }
+
 }
