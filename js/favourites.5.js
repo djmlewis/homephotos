@@ -128,15 +128,16 @@ function handleFavouritesFileElementChanged(element) {
 function handleDivIndexRowClicked(ev) {
     // dont respond to clicks on the div (although css prevents them too)
     if(ev.target !== this) {
-        loadThumbnailsForYearDir(ev.target.getAttribute('data-year'),ev.target.getAttribute('data-dir'));
+        loadThumbnailsForDirYear(ev.target.getAttribute('data-dy'));
     }
 }
 
-function loadThumbnailsForYearDir(year,dir) {
-    const yearBtn = Array.from(gvDivYears.getElementsByClassName('cssYearBtn')).find(e=>e.innerHTML === year);
+function loadThumbnailsForDirYear(diryear) {
+    const dyArray = diryear.split('§');// 0 = dir 1 = year
+    const yearBtn = Array.from(gvDivYears.getElementsByClassName('cssYearBtn')).find(e=>e.innerHTML === dyArray[1]);
     if(!!yearBtn) {
         yearBtn.click();
-        const dirBtn = Array.from(gvDivDirs.getElementsByClassName('cssDivDir')).find(e=>e.innerHTML === dir);
+        const dirBtn = Array.from(gvDivDirs.getElementsByClassName('cssDivDir')).find(e=>e.innerHTML === dyArray[0]);
         if(!!dirBtn) dirBtn.click();
         resizeColumns();// to account for divDirs being different height
     }
