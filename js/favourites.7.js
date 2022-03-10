@@ -128,12 +128,14 @@ function handleFavouritesFileElementChanged(element) {
 function handleDivIndexRowClicked(ev) {
     // dont respond to clicks on the div (although css prevents them too)
     if(ev.target !== this) {
-        loadThumbnailsForDirYear(ev.target.getAttribute('data-dy'));
+        loadThumbnailsForDirYear(ev.target.getAttribute('data-indx'));
     }
 }
 
-function loadThumbnailsForDirYear(diryear) {
-    const dyArray = diryear.split('§');// 0 = dir 1 = year
+function loadThumbnailsForDirYear(indx) {
+    //indx is the index in gvIndexDirYearsObj
+    const index = parseInt(indx);
+    const dyArray = gvIndexDirYearsObj[index].split(': ');// 0 = dir 1 = year
     const yearBtn = Array.from(gvDivYears.getElementsByClassName('cssYearBtn')).find(e=>e.innerHTML === dyArray[1]);
     if(!!yearBtn) {
         yearBtn.click();
@@ -147,33 +149,24 @@ function loadThumbnailsForDirYear(diryear) {
 function searchIndexFromSearchInput() {
     const searchStr = document.getElementById("input-searchlegend").value.toLowerCase();
     //const divIndexRows = document.getElementById("div-indexRows");
-    if (searchStr.length > 0) {
-        let counter = 1;
-        Array.from(gvDivIndexRows.getElementsByTagName('p')).forEach((para)=>{
-            const found = para.innerText.toLowerCase().includes(searchStr) === true;
-            para.hidden = !found;
-            para.classList.remove('E');
-            if(counter % 2 === 0) {
-                para.classList.remove('cssParaOdd');
-                para.classList.add('cssParaEven');
-            } else {
-                para.classList.add('cssParaOdd');
-                para.classList.remove('cssParaEven');
-            }
-            if(found) counter++;
-        });
-    } else clearSearchIndex();
+    if (searchStr.length > 0) createDirYearsHTML(searchStr.toLowerCase());
+    else createDirYearsHTML(null);
 }
 
 function clearSearchIndex() {
     document.getElementById("input-searchlegend").value = '';
-    Array.from(gvDivIndexRows.getElementsByTagName("p")).forEach(para=>{
-        para.hidden = false;
-        para.classList.remove('cssParaOdd');
-        para.classList.remove('cssParaEven');
-        para.classList.add('E');
-    });
+    createDirYearsHTML(null);
 }
 
+function createDirYearsHTML(searchtext) {
+    gvDivIndexRows.innerHTML = '';
+    gvIndexDirYearsObj.forEach((diryear,indx)=> {
+        if (searchtext === null || diryear.toLowerCase().includes(searchtext)) {
+            const div = document.createElement('div');
+            div.innerHTML = '<div data-indx ="' + indx + '">' + diryear + '</div>';
+            gvDivIndexRows.appendChild(div);
+        }
+    });
+}
 // **** LOAD THE FAvourites ****** //
 loadFavourites();

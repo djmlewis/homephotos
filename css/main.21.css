@@ -180,43 +180,18 @@ body {
 .cssDivIndexRows {
     pointer-events: none;
     cursor: auto;
-    column-count: 2;
+    /*column-count: 2;*/
 }
-.cssDivIndexRows > p {
+.cssDivIndexRows > * {
     font-size: medium;
     text-align: left;
     color: whitesmoke;
     pointer-events: all;
     cursor: pointer;
-    line-height: 1.1;
-    padding: 4px;
+    padding: 4px 4px 4px 8px;
     margin: 0;
-    border-radius: 4px;
-    break-inside: avoid-column;
+    width: 50%;!important;
 }
-
-.E:nth-child(odd){
-    background:#424242;
-}
-.E:nth-child(even){
-    background: black;
-}
-
-/*
-.cssBanding:nth-child(odd){
-    background:#313131;
-}
-.cssBanding:nth-child(even){
-    background: black;
-}
-*/
-.cssParaOdd {
-    background-color: #424242;!important;
-}
-.cssParaEven {
-    background-color: black;!important;
-}
-
 
 .cssDivIndexSearch {
     background-color: #212121;
@@ -230,8 +205,20 @@ body {
     .cssThumbnailImage {
         height: 30vh;
     }
-    .cssDivIndexRows {
-        column-count: 3;
+    .cssDivIndexRows > * {
+        width: 33%;
+    }
+    .cssDivIndexRows > *:nth-child(odd) {
+        background-color: #424242;
+    }
+}
+
+@media (max-width: 767px) {
+    .cssDivIndexRows > *:nth-child(4n) {
+        background-color: #424242;
+    }
+    .cssDivIndexRows > *:nth-child(4n+1) {
+        background-color: #424242;
     }
 
 }

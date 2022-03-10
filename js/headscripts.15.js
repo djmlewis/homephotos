@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     gvModalPhoto.addEventListener('hidden.bs.modal', ()=>{gvModalPhotoIsShown = false;});
     gvModalPhoto.addEventListener('shown.bs.modal', ()=>{gvModalPhotoIsShown = true;});
     buildYearButtons();
-    gvDivIndexRows.innerHTML = gvDirYearsHTML;
+    createDirYearsHTML(null);
     gvDivIndexRows.onclick = handleDivIndexRowClicked;
 });
 // call these functions on page fully loaded  -- DOMContentLoaded on DOCUMENT, onload on WINDOW
