@@ -1,6 +1,7 @@
 // call these functions on DOM loaded  -- DOMContentLoaded on DOCUMENT, onload on WINDOW
 document.addEventListener('DOMContentLoaded', function () {
     setupGlobals();
+    // noinspection TypeScriptUMDGlobal
     gvBootstrapModalPhoto = new bootstrap.Modal(gvModalPhoto, {});
     gvModalPhoto.addEventListener('hidden.bs.modal', ()=>{gvModalPhotoIsShown = false;});
     gvModalPhoto.addEventListener('shown.bs.modal', ()=>{gvModalPhotoIsShown = true;});

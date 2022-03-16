@@ -1,1 +1,0 @@
-let gvIndexDirYearsObj = ['Brownie initiation: 1999','Chloe: 1999','David Nativity: 1998','Davids Party: 1999','Davids swimming gala: 1999','Gatwick Zoo: 1999','Majorca: 1999','Mufti Day: 1999','Nativity: 1999','Otters Gala: 1999','Princess Anne: 1999','Rose: 1998','Roses Birthday: 1999','Warwick: 1999','Xmas: 1998'];
